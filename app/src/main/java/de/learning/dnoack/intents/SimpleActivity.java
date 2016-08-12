@@ -5,11 +5,14 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import java.util.ArrayList;
 
 
 public class SimpleActivity extends Activity {
+
+    private static final int RQ_INSERT_CONTACT = 1234;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,8 +45,25 @@ public class SimpleActivity extends Activity {
 
         in.putParcelableArrayListExtra(ContactsContract.Intents.Insert.DATA, data);
 
-        startActivity(in);
+        startActivityForResult(in, RQ_INSERT_CONTACT);
+        Log.d("info: ", "huhu");
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RQ_INSERT_CONTACT)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                if(data != null)
+                {
+                    Intent i = new Intent(Intent.ACTION_VIEW, data.getData());
+                    startActivity(i);
+                }
+            }
+        }
     }
 
 }
